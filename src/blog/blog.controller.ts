@@ -11,6 +11,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { BlogService } from './blog.service';
 import { CreateBlogDto, UpdateBlogDto } from './dto';
@@ -20,22 +21,34 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
-  async getAllBlogs(@Res() res, @Query() paginationQuery: PaginationQueryDto) {
+  async getAllBlogs(
+    @Res() res: Response,
+    @Query() paginationQuery: PaginationQueryDto,
+  ) {
     const blogs = await this.blogService.findAll(paginationQuery);
-    return res.status(HttpStatus.OK).json(blogs);
+    return res.status(HttpStatus.OK).json({
+      message: 'All Blogs has been fetched successfully',
+      blogs,
+    });
   }
 
   @Get('/:id')
-  public async getBlog(@Res() res, @Param('id') blogId: string) {
+  public async getBlog(@Res() res: Response, @Param('id') blogId: string) {
     if (!blogId) {
       throw new NotFoundException('Blog ID does not exist');
     }
     const blog = await this.blogService.findOne(blogId);
-    return res.status(HttpStatus.OK).json(blog);
+    return res.status(HttpStatus.OK).json({
+      message: 'Blog has been fetched successfully',
+      blog,
+    });
   }
 
   @Post()
-  public async addBlog(@Res() res, @Body() createBlogDto: CreateBlogDto) {
+  public async addBlog(
+    @Res() res: Response,
+    @Body() createBlogDto: CreateBlogDto,
+  ) {
     try {
       const blog = await this.blogService.create(createBlogDto);
       return res.status(HttpStatus.OK).json({
@@ -44,7 +57,7 @@ export class BlogController {
       });
     } catch (err) {
       return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Error: BLog not created!',
+        message: 'Error: Blog not created!',
         status: 400,
       });
     }
@@ -52,7 +65,7 @@ export class BlogController {
 
   @Put('/:id')
   public async updateBlog(
-    @Res() res,
+    @Res() res: Response,
     @Param('id') blogId: string,
     @Body() UpdateBlogDto: UpdateBlogDto,
   ) {
@@ -74,7 +87,7 @@ export class BlogController {
   }
 
   @Delete('/:id')
-  public async deleteBlog(@Res() res, @Param('id') blogId: string) {
+  public async deleteBlog(@Res() res: Response, @Param('id') blogId: string) {
     if (!blogId) {
       throw new NotFoundException('BLog ID does not exist');
     }
