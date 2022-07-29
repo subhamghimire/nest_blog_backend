@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { NextFunction } from 'express';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
@@ -16,4 +17,15 @@ export class Blog extends Document {
   body: string;
 }
 
-export const BlogSchema = SchemaFactory.createForClass(Blog);
+const BlogSchema = SchemaFactory.createForClass(Blog);
+
+BlogSchema.pre('save', async function (this: Blog, next: NextFunction) {
+  this.slug = this.title
+    .toLowerCase()
+    .replace(/ /g, '_')
+    .replace(/[^\w-]+/g, '');
+
+  next();
+});
+
+export { BlogSchema };
