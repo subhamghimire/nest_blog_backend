@@ -17,10 +17,7 @@ import { CreateBlogDto, UpdateBlogDto } from './dto';
 
 @Controller('blogs')
 export class BlogController {
-  service;
-  constructor(private readonly blogService: BlogService) {
-    this.service = blogService;
-  }
+  constructor(private readonly blogService: BlogService) {}
 
   @Get()
   async getAllBlogs(@Res() res, @Query() paginationQuery: PaginationQueryDto) {
