@@ -23,7 +23,7 @@ export class UserService {
     return this._userModel.findOne({ email: email }).exec();
   }
 
-  async verifyPassword(password, hashedPass) {
+  async verifyPassword(password: string, hashedPass: string): Promise<boolean> {
     return await bcrypt.compare(password, hashedPass);
   }
 }
