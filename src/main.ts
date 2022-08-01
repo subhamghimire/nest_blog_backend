@@ -13,8 +13,11 @@ async function bootstrap() {
       },
     }),
   );
+
   app.setGlobalPrefix('api');
   const PORT = process.env.PORT || 3002;
+
+  app.enableCors();
 
   await app.listen(PORT, () => {
     console.log(`Server is up at ${PORT}`);
