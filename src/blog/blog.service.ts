@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { IUser } from 'src/user/interfaces/user.interface';
+import { User } from 'src/user/schemas/user.schema';
 import { CreateBlogDto, UpdateBlogDto } from './dto';
 import { IBlog } from './interfaces/blog.interface';
 import { Blog } from './schemas/blog.schema';
@@ -27,8 +29,17 @@ export class BlogService {
     return blog;
   }
 
-  public async create(createBlogDto: CreateBlogDto): Promise<IBlog> {
-    return await this.blogModel.create(createBlogDto);
+  public async create(
+    createBlogDto: CreateBlogDto,
+    userId: string,
+  ): Promise<IBlog> {
+    try {
+      const blog = new this.blogModel(createBlogDto);
+      blog.authorId = userId;
+      return await blog.save();
+    } catch (err) {
+      throw err;
+    }
   }
 
   public async update(
