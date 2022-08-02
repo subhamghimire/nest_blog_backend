@@ -37,7 +37,7 @@ export class AuthService {
     return {
       access_token: this._jwtService.sign(payload, {
         issuer: process.env.JWT_ISSUER,
-        secret: process.env.JWT_SECRET_KEY,
+        secret: process.env.JWT_SECRET,
         expiresIn: process.env.JWT_EXPIRES,
       }),
     };
