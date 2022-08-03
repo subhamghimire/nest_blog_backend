@@ -16,7 +16,12 @@ export class BlogService {
 
   public async findAll(paginationQuery: PaginationQueryDto): Promise<IBlog[]> {
     const { limit, offset } = paginationQuery;
-    return await this.blogModel.find().skip(offset).limit(limit).exec();
+    return await this.blogModel
+      .find()
+      .populate('author')
+      .skip(offset)
+      .limit(limit)
+      .exec();
   }
 
   public async findOne(blogId: string): Promise<IBlog> {
@@ -35,7 +40,7 @@ export class BlogService {
   ): Promise<IBlog> {
     try {
       const blog = new this.blogModel(createBlogDto);
-      blog.authorId = userId;
+      blog.author = userId;
       return await blog.save();
     } catch (err) {
       throw err;

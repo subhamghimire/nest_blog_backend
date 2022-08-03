@@ -17,7 +17,7 @@ export class Blog extends Document {
   body: string;
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
-  authorId: string;
+  author: string;
 }
 
 const BlogSchema = SchemaFactory.createForClass(Blog);
